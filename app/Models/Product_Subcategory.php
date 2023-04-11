@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product_Subcategory extends Model
 {
-    protected $table = 'product_subcategory';
+    protected $table = 'subcategories';
     use HasFactory;
 
     public function Categories()
