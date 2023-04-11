@@ -17,6 +17,7 @@ class ProductCategoryController extends Controller
 
         $categories = Category::all();
         $ffhdjd=22;
+        $jdkeoe=33;
         foreach ($categories as $value) {
             $value = $value->subCategories;
         }
