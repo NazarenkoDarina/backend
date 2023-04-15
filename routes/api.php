@@ -30,3 +30,7 @@ Route::post('/discountedProduct',[ProductController::class,'GetDiscountedProduct
 Route::post('/productCategoriesForMenu',[ProductCategoryController::class,'GetCategoriesForMenu']);
 
 Route::post('/productsByShop/{id}/{count}',[ProductController::class,'GetProductByShop']);
+
+Route::post('/productsBySubcategory/{id}/{count}',[ProductController::class,'GetProductBySubCategory']);
+
+Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsByCategory']);

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product_Subcategory extends Model
+class Subcategory extends Model
 {
-    protected $table = 'subcategories';
+    // protected $table = 'subcategories';
     use HasFactory;
 
     public function Categories()
@@ -18,4 +18,6 @@ class Product_Subcategory extends Model
     public function Products(){
         return $this->hasMany(Product::class);
     }
+
+    
 }
