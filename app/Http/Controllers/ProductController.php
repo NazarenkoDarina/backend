@@ -13,8 +13,12 @@ class ProductController extends Controller
 {
    public function GetDiscountedProduct()
    {
-      return Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
+      $products= Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
          ->where('discounted_cost', '!=', 'NULL')->inRandomOrder()->limit(20)->get();
+         foreach ($products as $value) {
+            $value = $value->Shop;
+         }
+         return $products;
    }
 
    public function GetProductByShop($id, $count)
