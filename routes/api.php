@@ -31,6 +31,6 @@ Route::post('/productCategoriesForMenu',[ProductCategoryController::class,'GetCa
 
 Route::post('/productsByShop/{id}/{count}',[ProductController::class,'GetProductByShop']);
 
-Route::post('/productsBySubcategory/{id}/{count}',[ProductController::class,'GetProductBySubCategory']);
+Route::post('/productsBySubcategory/{id}',[ProductController::class,'GetProductBySubCategory']);
 
 Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsByCategory']);

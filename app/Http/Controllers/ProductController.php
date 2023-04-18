@@ -13,40 +13,48 @@ class ProductController extends Controller
 {
    public function GetDiscountedProduct()
    {
-        return Product::select(['id','name_product','image','shop_id','cost','discounted_cost'])
-        ->where('discounted_cost','!=','NULL')->inRandomOrder()->limit(20)->get();
+      return Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
+         ->where('discounted_cost', '!=', 'NULL')->inRandomOrder()->limit(20)->get();
    }
 
    public function GetProductByShop($id, $count)
    {
 
-      $products= Product::all(['id','name_product','image','shop_id','cost','discounted_cost'])
-      ->where('shop_id','=',$id)->take($count);
+      $products = Product::all(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
+         ->where('shop_id', '=', $id)->take($count);
 
-      $shop= Shop::select(['id','name_shop'])->where('id','=',$id)->get();
+      $shop = Shop::select(['id', 'name_shop'])->where('id', '=', $id)->get();
 
-      return [$shop,$products];
-
+      return [$shop, $products];
    }
 
-   public function GetProductBySubCategory($id,$count)
-   {     
-      $subCategories= Subcategory::select(['id','name_subcategory'])
-      ->where('id','=',$id)->get();
+   public function GetProductBySubCategory($id)
+   {
+      $subCategories = Subcategory::select(['id', 'name_subcategory'])
+         ->where('id', '=', $id)->get();
       foreach ($subCategories as $value) {
          $value = $value->Products;
-     }
-     return $subCategories;
+      }
+      return $subCategories;
    }
 
    public function GetProductsByCategory($idC)
    {
-      $subCategories= Subcategory::select(['id','name_subcategory'])
-      ->where('category_id','=',$idC)->get();
-      foreach ($subCategories as $value) {
-         $value = $value->Products;
-     }
-     return $subCategories;
+      $categories = Category::select('*')
+      ->where('id', '=', $idC)->get();
+      $array=[];
+      foreach ($categories as $value) {
+         array_push($array,$value = $value->subCategories);
+         
+      }
 
+
+      // return $array;
+      foreach ($array as $value) {
+         foreach ($value as  $s) {
+            $s=$s->Products;
+         }
+      } 
+      return $array;
    }
 }
