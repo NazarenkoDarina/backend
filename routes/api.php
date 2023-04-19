@@ -37,3 +37,4 @@ Route::post('/productsBySubcategory/{id}',[ProductController::class,'GetProductB
 Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsByCategory']);
 
 Route::post('/addProductInCart',[CartController::class,'AddProductInCart']);
+

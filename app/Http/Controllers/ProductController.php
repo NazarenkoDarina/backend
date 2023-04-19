@@ -61,4 +61,9 @@ class ProductController extends Controller
       } 
       return $array;
    }
+
+   public function GetProductInfo($id)
+   {
+      # code...
+   }
 }
