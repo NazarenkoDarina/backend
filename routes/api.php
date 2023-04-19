@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
@@ -34,3 +35,5 @@ Route::post('/productsByShop/{id}/{count}',[ProductController::class,'GetProduct
 Route::post('/productsBySubcategory/{id}',[ProductController::class,'GetProductBySubCategory']);
 
 Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsByCategory']);
+
+Route::post('/addProductInCart',[CartController::class,'AddProductInCart']);
