@@ -9,6 +9,6 @@ class ShopController extends Controller
 {
     public function GetShops()
     {
-        return Shop::select(['id','name_shop'. 'shop_logo'])->get();
+        return Shop::select(['id','name_shop', 'shop_logo'])->get();
     }
 }
