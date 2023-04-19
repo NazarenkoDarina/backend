@@ -64,6 +64,6 @@ class ProductController extends Controller
 
    public function GetProductInfo($id)
    {
-      # code...
+      return Product::select('*')->where('id','=',$id)->get();
    }
 }

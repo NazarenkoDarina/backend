@@ -38,3 +38,4 @@ Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsBy
 
 Route::post('/addProductInCart',[CartController::class,'AddProductInCart']);
 
+Route::post('/productsInfo/{id}',[ProductController::class,'GetProductInfo']);
