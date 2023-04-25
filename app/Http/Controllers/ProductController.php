@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Shop;
+use library\LinguaStemRu;
 
 
 class ProductController extends Controller
@@ -64,6 +65,12 @@ class ProductController extends Controller
 
    public function GetProductInfo($id)
    {
-      return Product::select('*')->where('id','=',$id)->get();
+      return Product::where('id','=',$id)->get();
+   }
+
+   public function searchProducts($subStr)
+   {
+      $products= Product::like($subStr)->limit(10)->get();
+      return $products;
    }
 }
