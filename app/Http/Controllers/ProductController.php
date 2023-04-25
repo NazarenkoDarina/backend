@@ -65,7 +65,10 @@ class ProductController extends Controller
 
    public function GetProductInfo($id)
    {
-      return Product::where('id','=',$id)->get();
+      $product = Product::where('id',$id)->get();
+      $nameProduct = explode(', ',$product[0]->name_product);
+      $sameProduct = Product::where('shop_id', '<>', $product[0]->shop_id)->where('name_product', 'like', $nameProduct[0])->get();
+      return [$product, $sameProduct];
    }
 
    public function searchProducts($subStr)
