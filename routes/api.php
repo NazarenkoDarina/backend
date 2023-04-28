@@ -41,3 +41,5 @@ Route::post('/addProductInCart',[CartController::class,'AddProductInCart']);
 Route::post('/productsInfo/{id}',[ProductController::class,'GetProductInfo']);
 
 Route::post('/searchProducts/{subStr}',[ProductController::class,'searchProducts']);
+
+Route::post('/CountProductInCart',[CartController::class,'CountProductInCart']); //вызов функции для получения кол-ва товаров в корзине (в шапку)
