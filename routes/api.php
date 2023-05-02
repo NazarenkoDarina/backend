@@ -42,4 +42,12 @@ Route::post('/productsInfo/{id}',[ProductController::class,'GetProductInfo']);
 
 Route::post('/searchProducts/{subStr}',[ProductController::class,'searchProducts']);
 
-Route::post('/CountProductInCart',[CartController::class,'CountProductInCart']); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+Route::post('/countProductInCart',[CartController::class,'CountProductInCart']); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+
+Route::post('/addCountProduct',[CartController::class,'AddCountProduct']); //увелечение количества товара
+
+Route::post('/delCountProduct',[CartController::class,'DelCountProduct']); //уменьшение количества товара
+
+Route::post('/deleteProductInCart',[CartController::class,'DeleteProductInCart']); //удалить товар из корзины
+
+Route::post('/deleteAllProductInCart',[CartController::class,'DeleteAllProductInCart']); //удалить все товары из корзины
