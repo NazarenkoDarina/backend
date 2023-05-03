@@ -12,13 +12,23 @@ class ProductController extends Controller
 {
     public function GetDiscountedProduct()
     {
-        $products = Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
-                           ->where('discounted_cost', '!=', 'NULL')->inRandomOrder()->limit(20)->get();
-        foreach ($products as $value) {
+        $products_magnit = Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
+          ->where([['discounted_cost', '!=', 'NULL'],['shop_id','=','2']])
+          ->inRandomOrder()->limit(10)->get();
+
+        foreach ($products_magnit as $value) {
             $value = $value->Shop;
         }
+        $products_perecrestock = Product::select(['id', 'name_product', 'image', 'shop_id', 'cost', 'discounted_cost'])
+          ->where([['discounted_cost', '!=', 'NULL'],['shop_id','=','4']])
+          ->inRandomOrder()->limit(10)->get();
+                  
+          foreach ($products_perecrestock as $value) {
+            $value = $value->Shop;
+          }
 
-        return $products;
+
+        return [$products_magnit,$products_perecrestock];
     }
 
     public function GetProductByShop($id, $count)

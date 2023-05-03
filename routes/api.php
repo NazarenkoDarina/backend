@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -45,10 +44,3 @@ Route::post('/productsByCategory/{idC}', [ProductController::class, 'GetProducts
 Route::post('/addProductInCart', [CartController::class, 'AddProductInCart']);
 
 Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
-
-Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
-
-Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
-); //вызов функции для получения кол-ва товаров в корзине (в шапку)
-
-Route::post('/sendCode', [AuthController::class, 'sendCode']);

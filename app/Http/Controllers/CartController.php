@@ -40,4 +40,30 @@ class CartController extends Controller
         $count = CartProduct::where("cart_id", $cartId)->count();
         return $count;
     }
+    public function AddCountProduct(Request $request)
+    {
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $count = CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count;
+        CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->update([
+            'count'=> $count+1.0
+        ]);
+    }
+    public function DelCountProduct(Request $request)
+    {
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $count = CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count;
+        CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->update([
+            'count'=> $count-1.0
+        ]);
+    }
+    public function DeleteProductInCart(Request $request)
+    {
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->delete();
+    }
+    public function DeleteAllProductInCart()
+    {
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        CartProduct::where("cart_id", $cartId)->delete();
+    }
 }
