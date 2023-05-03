@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -58,3 +59,5 @@ Route::post('/deleteProductInCart', [CartController::class, 'DeleteProductInCart
 
 Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProductInCart']
 ); //удалить все товары из корзины
+
+Route::post('/sendCode', [AuthController::class, 'sendCode']);
