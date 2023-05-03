@@ -1,14 +1,13 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
-use App\Models\Product;
-use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,25 +20,35 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/test', function () {
+        return Auth::user(); //сделать роутер /login
+    });
 });
 
-Route::post('/shops', [ShopController::class,'GetShops']);
-Route::post('/discountedProduct',[ProductController::class,'GetDiscountedProduct']);
+Route::post('/shops', [ShopController::class, 'GetShops']);
 
-Route::post('/productCategoriesForMenu',[ProductCategoryController::class,'GetCategoriesForMenu']);
+Route::post('/discountedProduct', [ProductController::class, 'GetDiscountedProduct']);
 
-Route::post('/productsByShop/{id}/{count}',[ProductController::class,'GetProductByShop']);
+Route::post('/productCategoriesForMenu', [ProductCategoryController::class, 'GetCategoriesForMenu']);
 
-Route::post('/productsBySubcategory/{id}',[ProductController::class,'GetProductBySubCategory']);
+Route::post('/productsByShop/{id}/{count}', [ProductController::class, 'GetProductByShop']);
 
-Route::post('/productsByCategory/{idC}',[ProductController::class,'GetProductsByCategory']);
+Route::post('/productsBySubcategory/{id}', [ProductController::class, 'GetProductBySubCategory']);
 
-Route::post('/addProductInCart',[CartController::class,'AddProductInCart']);
+Route::post('/productsByCategory/{idC}', [ProductController::class, 'GetProductsByCategory']);
 
-Route::post('/productsInfo/{id}',[ProductController::class,'GetProductInfo']);
+Route::post('/addProductInCart', [CartController::class, 'AddProductInCart']);
 
-Route::post('/searchProducts/{subStr}',[ProductController::class,'searchProducts']);
+Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
 
-Route::post('/CountProductInCart',[CartController::class,'CountProductInCart']); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
+
+Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
+); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+
+Route::post('/sendCode', [AuthController::class, 'sendCode']);
