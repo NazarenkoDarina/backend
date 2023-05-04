@@ -18,4 +18,11 @@ class AuthController extends Controller
         return Auth::user()->createToken('main')->plainTextToken;
         //return $smsAero->send(['79923009730'], 'Все норм работает');
     }
+
+    function Login(Request $request)
+    {
+        Auth::login(User::where('phone', '79125784822')->get()[0]);
+
+        return Auth::user()->createToken('main')->plainTextToken;
+    }
 }
