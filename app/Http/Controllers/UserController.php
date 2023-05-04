@@ -14,4 +14,10 @@ class UserController extends Controller
             'name_customer'=> $request->name
         ]);
     }
+    public function ChangePhoneUser(Request $request)
+    {
+        User::where('id', Auth::User()->id)->update([
+            'phone'=> $request->phone
+        ]);
+    }
 }
