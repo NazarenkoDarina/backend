@@ -36,8 +36,11 @@ class CartController extends Controller
     }
     public function CountProductInCart()
     {
-        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
-        $count = CartProduct::where("cart_id", $cartId)->count();
+        $count=0;
+        if (Cart::where('customer_id', "2")->exist()){
+            $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+            $count = CartProduct::where("cart_id", $cartId)->count();
+        }
         return $count;
     }
     public function AddCountProduct(Request $request)
