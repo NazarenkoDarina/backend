@@ -62,4 +62,6 @@ Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProduct
 
 Route::post('/sendCode', [AuthController::class, 'sendCode']);
 
+Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
+
 Route::get('/login', [AuthController::class, 'Login']);
