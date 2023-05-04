@@ -61,3 +61,5 @@ Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProduct
 ); //удалить все товары из корзины
 
 Route::post('/sendCode', [AuthController::class, 'sendCode']);
+
+Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
