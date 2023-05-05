@@ -27,10 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/test', function () {
-        return Auth::user()->createToken('main')->plainTextToken; //сделать роутер /login
+        return Auth::user(); //сделать роутер /login
     });
-
-    Route::post('/sendCode', [AuthController::class, 'sendCode']);
 });
 
 Route::post('/shops', [ShopController::class, 'GetShops']);
@@ -63,6 +61,10 @@ Route::post('/deleteProductInCart', [CartController::class, 'DeleteProductInCart
 Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProductInCart']
 ); //удалить все товары из корзины
 
+Route::post('/sendCode', [AuthController::class, 'sendCode']);
+
 Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/changePhoneUser', [UserController::class, 'ChangePhoneUser']);
+
+Route::get('/login', [AuthController::class, 'Login']);
