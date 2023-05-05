@@ -20,7 +20,7 @@ class AuthController extends Controller
         return 'asd';
     }
 
-    function login(Request $request)
+    function Login(Request $request)
     {
         if ( ! Auth::attempt(['phone' => $request->phone, 'password' => ''])) {
             $user  = Auth::user();
