@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Subcategory;
+use Elasticsearch\Client;
+use Elasticsearch;
 
 
 class ProductController extends Controller
@@ -74,15 +76,40 @@ class ProductController extends Controller
 
     public function GetProductInfo($id)
     {
-        $product     = Product::where('id', $id)->get();
-        $nameProduct = explode(', ', $product[0]->name_product);
-        $sameProduct = Product::where('shop_id', '<>', $product[0]->shop_id)->where(
-            'name_product',
-            'like',
-            $nameProduct[0]
-        )->get();
+        $product = Product::where('id', $id)->get();
+        $shopId = $product[0]->shop_id;
+        $brand = $product[0]->brand;
+        $q = $product[0]->name_product;
+        if ($q) {
+            $response = Elasticsearch::search([
+                'index' => 'products',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'type' => 'best_fields',
+                            'query' => "('name_product':$q) and ('brand':$brand)",
+                            
+                        ]
+                        
+                    ]
+                ]
+            ]);
+            $productsIds = array_column($response['hits']['hits'], '_id');
+            $i=0;
+            $bestscore='';
+            foreach ($productsIds as $id1){
+                if($i==0){
+                    if(Product::where('id',$id1)->where('shop_id','<>',$shopId)->exists()){
+                        $bestscore = Product::where('id',$id1)->where('shop_id','<>',$shopId)->get();
+                        $i=1;
 
-        return [$product, $sameProduct];
+                        unset($productsIds[array_search($id1, $productsIds)]);
+                    }
+                }
+            }
+            $products = Product::query()->findMany($productsIds)->where('shop_id','<>',$shopId);
+        }
+        return [$product,$bestscore,$products];
     }
 
     public function searchProducts($subStr)
