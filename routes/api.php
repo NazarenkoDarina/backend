@@ -70,3 +70,5 @@ Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
 Route::post('/changePhoneUser', [UserController::class, 'ChangePhoneUser']);
 
 Route::get('/login', [AuthController::class, 'Login']);
+
+Route::post('/register', [AuthController::class, 'register']);

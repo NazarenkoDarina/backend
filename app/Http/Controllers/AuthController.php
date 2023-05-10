@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Code;
+use App\Models\User;
 use App\Services\SmsAeroService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,26 +14,50 @@ class AuthController extends Controller
     {
         $smsAero = new SmsAeroService();
 
-        //Auth::login(User::where('phone', '79125784822')->get()[0]);
+        $rnd = mt_rand(1000, 9999);
 
-        //return Auth::user()->createToken('main')->plainTextToken;
-        //return $smsAero->send(['79923009730'], 'Все норм работает');
+        Code::create([
+            'phone' => $request->phone,
+            'code'  => $rnd
+        ]);
 
-        return 'asd';
+        return $smsAero->send([$request->phone], 'Code: ' . $rnd);
     }
 
-    function Login(Request $request)
+    public function register(Request $request)
     {
-        if ( ! Auth::attempt(['phone' => $request->phone, 'password' => ''])) {
+        if (Code::where('phone', $request->phone)->get()[0]) {
+            $code = Code::where('phone', $request->phone)->get()[0]->code;
+        }
+
+        if ($request->code === $code) {
+            User::create([
+                'phone' => $request->phone
+            ]);
+
+            Auth::login(User::where('phone', $request->phone)->get()[0]);
+
             $user  = Auth::user();
             $token = Auth::user()->createToken('main')->plainTextToken;
 
-            return compact($user, $token);
+            return [$user, $token];
         }
 
-        $user  = Auth::user();
-        $token = Auth::user()->createToken('main')->plainTextToken;
+        return response('Введите верный код', 422);
+    }
 
-        return compact($user, $token);
+    public function Login(Request $request)
+    {
+        if (Code::where('phone', $request->phone)->get()[0]) {
+            $code = Code::where('phone', $request->phone)->get()[0]->code;
+        }
+
+        if ($request->code === $code) {
+            Auth::login(User::where('phone', $request->phone)->get()[0]);
+
+            return Auth::user()->createToken('main')->plainTextToken;
+        }
+
+        return response('Введите верный код', 422);
     }
 }
