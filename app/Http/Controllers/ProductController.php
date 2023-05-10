@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Subcategory;
-use Elasticsearch\Client;
 use Elasticsearch;
 
 

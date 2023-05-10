@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartProduct;
+use App\Models\Product;
 
 class CartController extends Controller
 {
@@ -69,4 +70,20 @@ class CartController extends Controller
         $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         CartProduct::where("cart_id", $cartId)->delete();
     }
+    public function GetInfoCart(){
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $productsInCart = CartProduct::select('product_id','count')->where("cart_id", $cartId)->get();
+        $weight=0;
+        $productsIds=[];
+        foreach($productsInCart as $product){
+            $weight+=Product::where('id',$product->product_id)->get()[0]->weight * $product->count;
+            array_push($productsIds,$product->product_id);
+        }
+        $products = Product::query()->findMany($productsIds);
+        $data=[
+            'weight'=>$weight,
+            'products'=>$products
+        ];
+        return $data;
+    } 
 }
