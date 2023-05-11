@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\Product;
+use App\Models\Shop;
+use Elasticsearch;
 
 class CartController extends Controller
 {
@@ -38,7 +40,7 @@ class CartController extends Controller
     public function CountProductInCart()
     {
         $count=0;
-        if (Cart::where('customer_id', "2")->exist()){
+        if (Cart::where('customer_id', "2")->existsgi()){
             $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
             $count = CartProduct::where("cart_id", $cartId)->count();
         }
@@ -86,4 +88,58 @@ class CartController extends Controller
         ];
         return $data;
     } 
+
+    public function ComparisonCart()
+    {
+        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $productsInCart = CartProduct::select('product_id','count')->where("cart_id", $cartId)->get();
+        $countProductInCart = $productsInCart->count();
+        $productsIds=[];
+        foreach($productsInCart as $product){
+            array_push($productsIds,$product->product_id);
+        }
+        $shopsId = Shop::select('id')->get();
+        $bestscore=[];
+        foreach ($shopsId as $shopId){
+            $productInShop=[];
+            foreach ($productsIds as $prodId){
+                $product = Product::where('id',$prodId)->get();
+                $brand = $product[0]->brand;
+                $q = $product[0]->name_product;
+                if ($q) {
+                    $response = Elasticsearch::search([
+                        'index' => 'products',
+                        'body'  => [
+                            'query' => [
+                                'multi_match' => [
+                                    'type' => 'best_fields',
+                                    'query' => "('name_product':$q) and ('brand':$brand)",
+                                ] 
+                            ]
+                        ]
+                    ]);
+                    $productsIds1 = array_column($response['hits']['hits'], '_id');
+                    $i=0;                    
+                    foreach ($productsIds1 as $id1){
+                        if($i==0){
+                            if(Product::where('id',$id1)->exists()){
+                                array_push(Product::where('id',$id1)->where('shop_id',$shopId)->get(),$productInShop);
+                                $i=1;
+                                return Product::where('id',$id1)->where('shop_id',$shopId)->get();
+                            }
+                        }
+                    }
+                }
+
+            }
+            array_push($productInShop,$bestscore);
+        }
+        $data = [
+            'count'=>$countProductInCart,
+            'products'=>$productsIds,
+            'comparise'=>$bestscore
+        ];
+        return $data;
+
+    }
 }
