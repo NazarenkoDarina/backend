@@ -118,31 +118,31 @@ class CartController extends Controller
                 $q = $product[0]->name_product;
                 if ($q) {
                     $response = Elasticsearch::search([
-                        'index' => 'products',
+                        'index' => 'products1',
                         'body'  => [
                             'query' => [
-                                'multi_match' => [
-                                    'type' => 'best_fields',
-                                    'query' => "('name_product':$q) and ('brand':$brand)",
+                                'multi_match' => [                                   
+                                    'query' => "('name_product':$q) and ('brand':$brand) and ('shop_id':'$shopId->id')",
+                                    'type'=>'best_fields',
                                 ] 
                             ]
                         ]
                     ]);
                     $productsIds1 = array_column($response['hits']['hits'], '_id');
-                    $i=0;                    
-                    foreach ($productsIds1 as $id1){
-                        if($i==0){
-                            if(Product::where('id',$id1)->exists()){
-                                array_push(Product::where('id',$id1)->where('shop_id',$shopId)->get(),$productInShop);
+                    $i=0;
+                    foreach ($productsIds1 as $prodId1){
+                        if ($i==0){
+                            if(Product::where('id',$prodId1)->where('shop_id',$shopId->id)->exists()){
+                                array_push($productInShop,Product::where('id',$prodId1)->where('shop_id',$shopId->id)->get()[0]);
                                 $i=1;
-                                return Product::where('id',$id1)->where('shop_id',$shopId)->get();
+                                
                             }
                         }
-                    }
+                    }                   
                 }
 
             }
-            array_push($productInShop,$bestscore);
+            $bestscore+=[$shopId->id=>[$productInShop]];
         }
         $data = [
             'count'=>$countProductInCart,

@@ -36,10 +36,11 @@ class IndexProducts extends Command
             try {
                 Elasticsearch::index([
                     'id' => $product->id,
-                    'index' => 'products',
+                    'index' => 'products1',
                     'body' => [
                         'name_product' => $product->name_product,
                         'brand' => $product->brand,
+                        'shop_id'=>$product->shop_id,
                     ]
                 ]);
             } catch (Exception $e) {
