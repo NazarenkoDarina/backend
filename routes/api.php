@@ -29,6 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/test', function () {
         return Auth::user(); //сделать роутер /login
     });
+
+    Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
+    ); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+
 });
 
 Route::post('/shops', [ShopController::class, 'GetShops']);
@@ -48,9 +52,6 @@ Route::post('/addProductInCart', [CartController::class, 'AddProductInCart']);
 Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
 
 Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
-
-Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
-); //вызов функции для получения кол-ва товаров в корзине (в шапку)
 
 Route::post('/addCountProduct', [CartController::class, 'AddCountProduct']); //увелечение количества товара
 
