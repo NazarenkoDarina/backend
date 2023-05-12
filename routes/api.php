@@ -7,7 +7,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,13 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::post('/test', function () {
-        return Auth::user(); //сделать роутер /login
-    });
-
     Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
     ); //вызов функции для получения кол-ва товаров в корзине (в шапку)
 
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::post('/shops', [ShopController::class, 'GetShops']);
@@ -72,6 +68,6 @@ Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
 
 Route::post('/changePhoneUser', [UserController::class, 'ChangePhoneUser']);
 
-Route::get('/login', [AuthController::class, 'Login']);
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/register', [AuthController::class, 'register']);

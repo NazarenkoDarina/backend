@@ -16,10 +16,17 @@ class AuthController extends Controller
 
         $rnd = mt_rand(1000, 9999);
 
-        Code::create([
-            'phone' => $request->phone,
-            'code'  => $rnd
-        ]);
+        if (Code::where('phone', $request->phone)->exists()) {
+            Code::where('phone', $request->phone)->update([
+                'code' => $rnd
+            ]);
+        } else {
+            Code::create([
+                'phone' => $request->phone,
+                'code'  => $rnd
+            ]);
+        }
+
 
         return $smsAero->send([$request->phone], 'Code: ' . $rnd);
     }
@@ -46,7 +53,7 @@ class AuthController extends Controller
         return response('Введите верный код', 422);
     }
 
-    public function Login(Request $request)
+    public function login(Request $request)
     {
         if (Code::where('phone', $request->phone)->get()[0]) {
             $code = Code::where('phone', $request->phone)->get()[0]->code;
@@ -55,9 +62,17 @@ class AuthController extends Controller
         if ($request->code === $code) {
             Auth::login(User::where('phone', $request->phone)->get()[0]);
 
-            return Auth::user()->createToken('main')->plainTextToken;
+            $user  = Auth::user();
+            $token = Auth::user()->createToken('main')->plainTextToken;
+
+            return [$user, $token];
         }
 
         return response('Введите верный код', 422);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::user()->currentAccessToken()->delete();
     }
 }
