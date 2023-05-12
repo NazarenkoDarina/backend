@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Elasticsearch;
 
 class CartController extends Controller
 {
@@ -102,16 +103,19 @@ class CartController extends Controller
     {
         $cartId             = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         $productsInCart     = CartProduct::select('product_id', 'count')->where("cart_id", $cartId)->get();
-        $countProductInCart = $productsInCart->count();
         $productsIds        = [];
         foreach ($productsInCart as $product) {
-            array_push($productsIds, $product->product_id);
+            $productsIds+= [$product->product_id=>$product->count];
         }
-        $shopsId   = Shop::select('id')->get();
+        $shopsId   = Shop::select('id','name_shop', 'logo_shop')->get();
         $bestscore = [];
         foreach ($shopsId as $shopId) {
             $productInShop = [];
-            foreach ($productsIds as $prodId) {
+            $noProductInShop=[];
+            $endCount=0;
+            $endSum =0;
+            $endWeight=0;
+            foreach ($productsIds as $prodId=>$count) {
                 $product = Product::where('id', $prodId)->get();
                 $brand   = $product[0]->brand;
                 $q       = $product[0]->name_product;
@@ -121,7 +125,7 @@ class CartController extends Controller
                         'body'  => [
                             'query' => [
                                 'multi_match' => [
-                                    'query' => "('name_product':$q) and ('brand':$brand) and ('shop_id':'$shopId->id')",
+                                    'query' => "('name_product':$q) and ('brand':$brand) and ('shop_id':$shopId->id)",
                                     'type'  => 'best_fields',
                                 ]
                             ]
@@ -129,24 +133,40 @@ class CartController extends Controller
                     ]);
                     $productsIds1 = array_column($response['hits']['hits'], '_id');
                     $i            = 0;
+                    $j=0;
                     foreach ($productsIds1 as $prodId1) {
                         if ($i == 0) {
                             if (Product::where('id', $prodId1)->where('shop_id', $shopId->id)->exists()) {
-                                array_push(
-                                    $productInShop,
-                                    Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]
-                                );
+                                
+                                array_push($productInShop,Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]);
+                                
+                                $endCount+=1;
+                                if( Product::where('id', $prodId1)->get()[0]->discounted_cost>0){
+                                    $endSum += Product::where('id', $prodId1)->get()[0]->discounted_cost * $count;
+                                }else{
+                                    $endSum += Product::where('id', $prodId1)->get()[0]->cost * $count;
+                                }
+                                $endWeight += Product::where('id', $prodId1)->get()[0]->weight * $count;
                                 $i = 1;
                             }
                         }
                     }
+                    if($i==0){
+                        array_push($noProductInShop,Product::where('id', $prodId)->get()[0]);
+                    }
                 }
             }
-            $bestscore += [$shopId->id => [$productInShop]];
+            $bestscore += [$shopId->id=>[
+                    'name_shop'=>$shopId->name_shop,
+                    'logo_shop'=>$shopId->logo_shop,
+                    'count'=>$endCount,
+                    'weight'=>$endWeight,
+                    'summ'=>$endSum,
+                    'products'=>$productInShop,
+                    'no products'=>$noProductInShop
+            ]];
         }
         $data = [
-            'count'     => $countProductInCart,
-            'products'  => $productsIds,
             'comparise' => $bestscore
         ];
 
