@@ -29,8 +29,11 @@ Route::middleware('auth:sanctum')->group(function () {
     ); //вызов функции для получения кол-ва товаров в корзине (в шапку)
 
     Route::post('/logout', [AuthController::class, 'logout']);
-});
 
+    Route::post('/addCountProduct', [CartController::class, 'AddCountProduct']); //увелечение количества товара
+
+});
+//public
 Route::post('/shops', [ShopController::class, 'GetShops']);
 
 Route::post('/discountedProduct', [ProductController::class, 'GetDiscountedProduct']);
@@ -43,13 +46,12 @@ Route::post('/productsBySubcategory/{id}', [ProductController::class, 'GetProduc
 
 Route::post('/productsByCategory/{idC}', [ProductController::class, 'GetProductsByCategory']);
 
+//это роутер с проверкой на существование корзины, его надо удалить это мы сделали как то раз, потом коля другие наклепал
 Route::post('/addProductInCart', [CartController::class, 'AddProductInCart']);
 
 Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
 
 Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
-
-Route::post('/addCountProduct', [CartController::class, 'AddCountProduct']); //увелечение количества товара
 
 Route::post('/delCountProduct', [CartController::class, 'DelCountProduct']); //уменьшение количества товара
 

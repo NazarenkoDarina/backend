@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Product;
-use App\Models\Subcategory;
+use Illuminate\Console\Command;
 use Elasticsearch;
 
 class IndexProducts extends Command
@@ -35,12 +34,12 @@ class IndexProducts extends Command
         foreach ($products as $product) {
             try {
                 Elasticsearch::index([
-                    'id' => $product->id,
-                    'index' => 'products1',
-                    'body' => [
+                    'id'    => $product->id,
+                    'index' => 'products',
+                    'body'  => [
                         'name_product' => $product->name_product,
-                        'brand' => $product->brand,
-                        'shop_id'=>$product->shop_id,
+                        'brand'        => $product->brand,
+                        'shop_id'      => $product->shop_id,
                     ]
                 ]);
             } catch (Exception $e) {
@@ -49,5 +48,5 @@ class IndexProducts extends Command
         }
 
         $this->info("Posts were successfully indexed");
-            }
+    }
 }
