@@ -70,7 +70,7 @@ class CartController extends Controller
 
     public function DelCountProduct(Request $request)
     {
-        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         $count  = CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count;
         CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->update([
             'count' => $count - 1.0
@@ -79,19 +79,19 @@ class CartController extends Controller
 
     public function DeleteProductInCart(Request $request)
     {
-        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->delete();
     }
 
     public function DeleteAllProductInCart()
     {
-        $cartId = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         CartProduct::where("cart_id", $cartId)->delete();
     }
 
     public function GetInfoCart()
     {
-        $cartId         = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId         = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         $productsInCart = CartProduct::select('product_id', 'count')->where("cart_id", $cartId)->get();
         $weight         = 0;
         $productsIds    = [];
@@ -102,15 +102,20 @@ class CartController extends Controller
         $products = Product::query()->findMany($productsIds);
         $data     = [
             'weight'   => $weight,
+            'cart' => $cartId,
             'products' => $products
         ];
+
+        foreach ($data['products'] as  $value) {
+            $value->cartProduct;
+        }
 
         return $data;
     }
 
     public function ComparisonCart()
     {
-        $cartId         = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId         = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         $productsInCart = CartProduct::select('product_id', 'count')->where("cart_id", $cartId)->get();
         $productsIds    = [];
         foreach ($productsInCart as $product) {

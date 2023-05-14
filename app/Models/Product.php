@@ -20,6 +20,11 @@ class Product extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
+    public function cartProduct()
+    {
+        return $this->hasMany(CartProduct::class);
+    }
+
     public function scopeLike($query, $s)
     {
         $s = iconv_substr($s, 0, 64);
