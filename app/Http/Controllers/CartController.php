@@ -156,20 +156,17 @@ class CartController extends Controller
                     }
                 }
             }
-            $bestscore += [$shopId->id=>[
+            array_push($bestscore,[
                     'name_shop'=>$shopId->name_shop,
                     'logo_shop'=>$shopId->logo_shop,
                     'count'=>$endCount,
                     'weight'=>$endWeight,
                     'summ'=>$endSum,
                     'products'=>$productInShop,
-                    'no products'=>$noProductInShop
-            ]];
-        }
-        $data = [
-            'comparise' => $bestscore
-        ];
+                    'no products'=>$noProductInShop]
+                );
+        }       
 
-        return $data;
+        return $bestscore;
     }
 }
