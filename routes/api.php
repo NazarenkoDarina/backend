@@ -33,6 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/addCountProduct', [CartController::class, 'AddCountProduct']); //увелечение количества товара
 
     Route::post('/getInfoCart', [CartController::class, 'GetInfoCart']);
+    
+    Route::post('/deleteProductInCart', [CartController::class, 'DeleteProductInCart']); //удалить товар из корзины
+
 
 });
 //public
@@ -56,8 +59,6 @@ Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
 Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
 
 Route::post('/delCountProduct', [CartController::class, 'DelCountProduct']); //уменьшение количества товара
-
-Route::post('/deleteProductInCart', [CartController::class, 'DeleteProductInCart']); //удалить товар из корзины
 
 Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProductInCart']
 ); //удалить все товары из корзины
