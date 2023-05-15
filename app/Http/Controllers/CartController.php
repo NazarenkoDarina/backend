@@ -71,10 +71,15 @@ class CartController extends Controller
     public function DelCountProduct(Request $request)
     {
         $cartId = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
-        $count  = CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count;
-        CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->update([
-            'count' => $count - 1.0
-        ]);
+        if (CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->exists() && 
+                                CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count>1){
+            $count  = CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->get()[0]->count;
+            CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->update([
+                'count' => $count - 1.0
+            ]);
+        }else{
+            CartProduct::where("cart_id", $cartId)->where("product_id", $request->id)->delete();
+        }
     }
 
     public function DeleteProductInCart(Request $request)
