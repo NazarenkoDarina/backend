@@ -117,7 +117,7 @@ class ProductController extends Controller
 
     public function searchProducts($subStr)
     {
-        $products = Product::like($subStr)->limit(10)->get();
+        $products = Product::like($subStr)->get();
 
         return $products;
     }

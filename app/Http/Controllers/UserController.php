@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Code;
+
 class UserController extends Controller
 {
     public function AddNameUser(Request $request)
@@ -26,8 +28,18 @@ class UserController extends Controller
     
     public function ChangePhoneUser(Request $request)
     {
-        User::where('id', Auth::User()->id)->update([
-            'phone'=> $request->phone
-        ]);
+        if (Code::where('phone', $request->phone)->get()[0]) {
+            $code = Code::where('phone', $request->phone)->get()[0]->code;
+        }
+
+        if ($request->code === $code) {
+            User::where('id', Auth::User()->id)->update([
+                'phone'=> $request->phone
+            ]);
+
+            return response('', 200);
+        }
+
+        return response('', 422);
     }
 }
