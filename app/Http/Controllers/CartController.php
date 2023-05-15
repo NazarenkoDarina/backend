@@ -157,7 +157,7 @@ class CartController extends Controller
                     'weight'      => $endWeight,
                     'summ'        => $endSum,
                     'products'    => $productInShop,
-                    'no products' => $noProductInShop
+                    'no_products' => $noProductInShop
                 ]
             );
         }

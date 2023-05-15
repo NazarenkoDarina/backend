@@ -39,6 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/delCountProduct', [CartController::class, 'DelCountProduct']); //уменьшение количества товара
 
+    Route::post('/comparisonCart', [CartController::class, 'ComparisonCart']);
+
+    Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
+
+    Route::post('/changePhoneUser', [UserController::class, 'ChangePhoneUser']);
 
 });
 //public
@@ -58,14 +63,7 @@ Route::post('/productInfo/{id}', [ProductController::class, 'GetProductInfo']);
 
 Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProducts']);
 
-
-Route::post('/comparisonCart', [CartController::class, 'ComparisonCart']);
-
 Route::post('/sendCode', [AuthController::class, 'sendCode']);
-
-Route::post('/addNameUser', [UserController::class, 'AddNameUser']);
-
-Route::post('/changePhoneUser', [UserController::class, 'ChangePhoneUser']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
