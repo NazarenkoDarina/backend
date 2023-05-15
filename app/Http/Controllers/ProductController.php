@@ -106,14 +106,13 @@ class ProductController extends Controller
                     }
                 }
             }
-            $products = Product::query()->findMany($productsIds)->where('shop_id','<>',$shopId);
         }
         $product[0]->shop;
 
         foreach ($bestscore as $value) {
             $value->shop;
         }
-        return [$product,$bestscore,$products];
+        return [$product,$bestscore];
     }
 
     public function searchProducts($subStr)
