@@ -25,17 +25,17 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']
-    ); //вызов функции для получения кол-ва товаров в корзине (в шапку)
+    Route::post('/CountProductInCart', [CartController::class, 'CountProductInCart']); //вызов функции для получения кол-ва товаров в корзине (в шапку)
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/addCountProduct', [CartController::class, 'AddCountProduct']); //увелечение количества товара
 
     Route::post('/getInfoCart', [CartController::class, 'GetInfoCart']);
-    
+
     Route::post('/deleteProductInCart', [CartController::class, 'DeleteProductInCart']); //удалить товар из корзины
 
+    Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProductInCart']); //удалить все товары из корзины
 
 });
 //public
@@ -60,8 +60,6 @@ Route::post('/searchProducts/{subStr}', [ProductController::class, 'searchProduc
 
 Route::post('/delCountProduct', [CartController::class, 'DelCountProduct']); //уменьшение количества товара
 
-Route::post('/deleteAllProductInCart', [CartController::class, 'DeleteAllProductInCart']
-); //удалить все товары из корзины
 
 Route::post('/comparisonCart', [CartController::class, 'ComparisonCart']);
 
