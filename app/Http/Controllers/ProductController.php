@@ -109,6 +109,7 @@ class ProductController extends Controller
         }
         $product[0]->shop;
 
+        if($bestscore != '')
         foreach ($bestscore as $value) {
             $value->shop;
         }

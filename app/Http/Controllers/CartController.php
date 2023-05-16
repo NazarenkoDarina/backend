@@ -113,7 +113,7 @@ class CartController extends Controller
                 $q       = $product[0]->name_product;
                 if ($q) {
                     $response     = Elasticsearch::search([
-                        'index' => 'products1',
+                        'index' => 'products',
                         'body'  => [
                             'query' => [
                                 'multi_match' => [
