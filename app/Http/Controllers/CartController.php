@@ -93,7 +93,7 @@ class CartController extends Controller
 
     public function ComparisonCart()
     {
-        $cartId         = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId         = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;
         $productsInCart = CartProduct::select('product_id', 'count')->where("cart_id", $cartId)->get();
         $productsIds    = [];
         foreach ($productsInCart as $product) {
