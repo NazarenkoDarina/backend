@@ -142,7 +142,6 @@ class CartController extends Controller
                                         Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]
                                         );
                                 }
-
                                 $endCount += 1;
                                 if (Product::where('id', $prodId1)->get()[0]->discounted_cost > 0) {
                                     $endSum += Product::where('id', $prodId1)->get()[0]->discounted_cost * $count;
@@ -171,7 +170,38 @@ class CartController extends Controller
                 ]
             );
         }
-
-        return $bestscore;
+        $comparison=[];
+        foreach ($bestscore as $mass){
+            array_push($comparison,[
+                'shop'=>$mass['name_shop'],
+                'summ'=>$mass['summ'],
+                'count'=>$mass['count']
+                ]
+            );
+        }
+        $copmSumm=999999999;
+        $copmCount=0;
+        foreach($comparison as $comp){
+            if($copmSumm>$comp['summ']){
+                $copmSumm = $comp['summ'];
+            }
+            if($copmCount<$comp['count']){
+                $copmCount = $comp['count'];
+            }
+        }
+        $endResult=[];
+        foreach($bestscore as $mass){
+            if($copmCount==$mass['count']){
+                if($copmSumm==$mass['summ']){
+                    array_unshift($endResult, $mass);
+                }
+                else{
+                    array_push($endResult, $mass);
+                }
+            }else{
+                array_push($endResult, $mass);
+            }
+        }
+        return $endResult;
     }
 }
