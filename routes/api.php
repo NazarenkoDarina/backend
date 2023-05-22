@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 //public
+Route::post('/comparisonCart', [CartController::class, 'ComparisonCart']);
 Route::post('/shops', [ShopController::class, 'GetShops']);
 
 Route::post('/discountedProduct', [ProductController::class, 'GetDiscountedProduct']);

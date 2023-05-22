@@ -93,7 +93,7 @@ class CartController extends Controller
 
     public function ComparisonCart()
     {
-        $cartId         = Cart::where('customer_id', Auth::user()->id)->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
+        $cartId         = Cart::where('customer_id', "2")->get()[0]->id;//"2" - Auth::User()->id; Тест-данные
         $productsInCart = CartProduct::select('product_id', 'count')->where("cart_id", $cartId)->get();
         $productsIds    = [];
         foreach ($productsInCart as $product) {
@@ -103,6 +103,7 @@ class CartController extends Controller
         $bestscore = [];
         foreach ($shopsId as $shopId) {
             $productInShop   = [];
+            $productInShopAnalog  = [];
             $noProductInShop = [];
             $endCount        = 0;
             $endSum          = 0;
@@ -123,16 +124,24 @@ class CartController extends Controller
                             ]
                         ]
                     ]);
-                    $productsIds1 = array_column($response['hits']['hits'], '_id');
+                    $productsIds1 = array_column($response['hits']['hits'],'_score', '_id');
                     $i            = 0;
                     $j            = 0;
-                    foreach ($productsIds1 as $prodId1) {
+                    foreach ($productsIds1 as $prodId1=>$score) {  
                         if ($i == 0) {
                             if (Product::where('id', $prodId1)->where('shop_id', $shopId->id)->exists()) {
-                                array_push(
-                                    $productInShop,
-                                    Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]
-                                );
+                                if($score>20.00){
+                                    array_push(
+                                        $productInShop,
+                                        Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]
+                                        );
+                                    }
+                                else if($score<20.00) {
+                                    array_push(
+                                        $productInShopAnalog,
+                                        Product::where('id', $prodId1)->where('shop_id', $shopId->id)->get()[0]
+                                        );
+                                }
 
                                 $endCount += 1;
                                 if (Product::where('id', $prodId1)->get()[0]->discounted_cost > 0) {
@@ -143,7 +152,7 @@ class CartController extends Controller
                                 $endWeight += Product::where('id', $prodId1)->get()[0]->weight * $count;
                                 $i         = 1;
                             }
-                        }
+                        }                  
                     }
                     if ($i == 0) {
                         array_push($noProductInShop, Product::where('id', $prodId)->get()[0]);
@@ -157,6 +166,7 @@ class CartController extends Controller
                     'weight'      => $endWeight,
                     'summ'        => $endSum,
                     'products'    => $productInShop,
+                    'analog'      => $productInShopAnalog,
                     'no_products' => $noProductInShop
                 ]
             );
