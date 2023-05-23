@@ -114,6 +114,7 @@ class ProductController extends Controller
             $value->shop;
         }
         return [$product,$bestscore];
+        
     }
 
     public function searchProducts($subStr)
